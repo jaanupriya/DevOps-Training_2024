@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            text-align: center;
+        }
+
+        header {
+            background-color: #ff5722;
+            color: white;
+            padding: 1rem 0;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        .buttons {
+            margin: 2rem 0;
+        }
+
+        .buttons button {
+            background-color: #ff5722;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            margin: 0.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .buttons button:hover {
+            background-color: #e64a19;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to Foodie's Delight</h1>
+    </header>
+
+    <section>
+        <h2>Explore Our Menu</h2>
+        <div class="buttons">
+            <button onclick="alert('Browse Starters')">Starters</button>
+            <button onclick="alert('Browse Main Course')">Main Course</button>
+            <button onclick="alert('Browse Desserts')">Desserts</button>
+            <button onclick="alert('Browse Beverages')">Beverages</button>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Foodie's Delight. All rights reserved.</p>
+    </footer>
+</body>
+</html>
