@@ -1,0 +1,75 @@
+pipeline {
+    agent any
+
+ environment {
+        // Define environment variables
+        S3_BUCKET = 'myjenkinsbucket'
+        AWS_REGION = 'us-east-2'
+        EC2_INSTANCE_IP = '18.218.36.233'
+        NGINX_HTML_DIR = '/usr/share/nginx/html'
+        GITHUB_REPO = 'https://github.com/jaanupriya/DevOps-Training_2024.git'
+        SSH_KEY_PATH = '/home/ec2-user/My-Jenkins.pem'
+
+
+        // Manually entered AWS credentials
+        AWS_ACCESS_KEY_ID = 'AKIA46ZDFIZRQT476US3'
+        AWS_SECRET_ACCESS_KEY = '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'
+        SUDO_PASSWORD='123456789'
+    }
+
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                // Clone the GitHub repository
+                git branch: 'main', url: "${GITHUB_REPO}"
+            }
+        }
+
+        stage('Setup AWS CLI') {
+            steps {
+                sh '''
+                    aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID}
+                    aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
+                    aws configure set default.region ${AWS_REGION}
+                '''
+            }
+        }
+
+        stage('Upload to S3') {
+            steps {
+                // Upload index.html to S3
+                sh '''
+                    aws s3 cp index.html s3://${S3_BUCKET}/ --region ${AWS_REGION}
+                '''
+            }
+        }
+
+        stage('Deploy to Nginx') {
+            steps {
+                // Copy the file from S3 to EC2 instance
+                sh '''
+                    ssh -i ${SSH_KEY_PATH} ec2-user@${EC2_INSTANCE_IP} "aws s3 cp s3://${S3_BUCKET}/index.html ${NGINX_HTML_DIR}/index.html --region ${AWS_REGION}"
+                '''
+                
+                // Restart Nginx service to apply changes
+                sh '''
+                    ssh -i ${SSH_KEY_PATH} ec2-user@${EC2_INSTANCE_IP} "sudo systemctl restart nginx"
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline executed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed. Check logs for errors.'
+        }
+    }
+}
+
+
+
+s3://myjenkinsbucket/Folder1/
